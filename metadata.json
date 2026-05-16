@@ -1,0 +1,6 @@
+{
+  "name": "Warp Jumper",
+  "description": "A precision platformer where you are a dimensional acrobat who can teleport short distances mid-air.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
