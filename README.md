@@ -6,22 +6,29 @@ Warp Jumper is a fast, fluid, and visually stunning precision platformer built w
 
 - **High-Performance Canvas Graphics:** Runs smoothly using highly stylized neon vector graphics and particle effects.
 - **On-chain Integrations:** Powered by Base Mainnet.
-  - ERC-8021 Transaction Attribution support (Builder: `bc_jimjbehn`).
+  - ERC-8021 Transaction Attribution support.
   - ERC-8004 Trustless Agents integrated.
   - Submits High Scores securely to the blockchain.
 - **AI Agent Orchestrator:** Fully configured `.well-known/agent-card.json` and `MCP` (Model Context Protocol) ready.
 - **Mobile First:** Designed with touch semantics, portrait orientation, and fast responses.
 - **Dimensional Mechanics:** Utilizes dimensional mechanics like Warp Dash, Warp Echo, and Momentum Carry.
-- **Frosted Glass UI:** Implements a polished neo-brutalist / frosted-glass UI powered by Tailwind CSS.
+- **Frosted Glass UI:** Implements a polished neo-brutalist / frosted-glass UI stringing together minimalist aesthetics and vibrant neon accents.
+
+## 🔗 Platform & Integrations
+
+- **Network:** Base Mainnet
+- **Orchestrator Agent:** Warp Jumper Orchestrator v1.0.0
+- **Supported Capabilities:** warp-jumping, dimension-travel, fast-navigation, multi-realm-orchestration, teleportation-automation, path-optimization, mcp-command-execution
+- **Agent API:** `/api/agent`
+- **MCP Protocol:** `/api/mcp` (Supports tools: get_race_status, start_race, get_leaderboard, optimize_speed, get_track_info)
 
 ## 🏗️ Technology Stack
 
-- **Framework:** React + Vite
+- **Framework:** React + Vite (or Next.js for APIs depending on your Vercel deployment method)
 - **Styling:** Tailwind CSS + Frosted Glass Design System
 - **Animation:** Framer Motion
 - **State Management:** Zustand
 - **Web3 Integrations:** Wagmi + Viem + SIWE Auth
-- **Backend / Agent APIs:** Express.js + Next-style routing mapped to Express.
 
 ## 💡 How to Play
 
@@ -40,9 +47,8 @@ We have deeply integrated AI capabilities using an ERC-8004 compliant intelligen
   - `GET /.well-known/agent-card.json` (Agent discovery manifest)
 - **Active Capabilities:** `warp-jumping`, `dimension-travel`, `multi-realm-orchestration`, and more.
 
-## 🔒 Security and Architecture
+## 🌐 How to Run Locally
 
-*Note: For security reasons, sensitive environment variables and deployment configurations (such as standard API keys, RPC endpoints, and deploy variables) are excluded from this repository and must be injected dynamically via `.env`.*
-
----
-*Built for the Base Ecosystem.*
+1. Install dependencies: `npm install`
+2. Start the development server: `npm run dev`
+3. Launch the AI Studio Server functionality (if using local node Express): `npm start`
