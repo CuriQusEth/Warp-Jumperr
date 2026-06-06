@@ -1,14 +1,17 @@
 import React from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { motion } from 'motion/react';
-import { delegateToAgent } from '../../lib/erc8004';
 import { useAccount, useConnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
+import { useERC8021Transaction } from '../../hooks/useERC8021Transaction';
+import { stringToHex, Hex } from 'viem';
 
 export default function LeaderboardScreen() {
   const { setScreen } = useGameStore();
   const { address, isConnected } = useAccount();
   const { connect } = useConnect();
+  
+  const { sendTransaction, isPending, hash, isSuccess } = useERC8021Transaction();
 
   const mockLeaderboard = [
     { rank: 1, address: "0x4A...2B", distance: 8420, score: 1250000 },
@@ -23,12 +26,13 @@ export default function LeaderboardScreen() {
       connect({ connector: injected() });
       return;
     }
-     delegateToAgent({
-       id: "gm_task_" + Date.now(),
-       action: "SAY_GM_ONCHIP",
-       payload: { message: "GM from Warp Jumper!" }
-     });
-     alert("Sent 'GM' via Trustless Agent (ERC-8004 Mock)");
+    if (address) {
+      const gmData = stringToHex('GM from Warp Jumper!');
+      sendTransaction({
+        to: address,
+        data: gmData as Hex
+      });
+    }
   };
 
   return (
@@ -68,13 +72,25 @@ export default function LeaderboardScreen() {
                </motion.div>
              ))}
            </div>
-           <div className="mt-8">
+           <div className="mt-8 space-y-4">
               <button 
                 onClick={handleSayGM}
-                className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl font-black text-sm uppercase tracking-tighter hover:brightness-110 shadow-lg"
+                disabled={isPending}
+                className={`w-full py-4 rounded-2xl font-black text-sm uppercase tracking-tighter transition-all shadow-lg
+                  ${isPending 
+                    ? "bg-white/10 text-white/40 cursor-not-allowed" 
+                    : "bg-gradient-to-r from-purple-600 to-blue-600 hover:brightness-110"
+                  }`}
               >
-                {isConnected ? "SAY GM ON-CHAIN" : "CONNECT TO SAY GM"}
+                {isPending ? "Transmitting..." : (isConnected ? "SAY GM ON-CHAIN" : "CONNECT TO SAY GM")}
               </button>
+              
+              {isSuccess && hash && (
+                <div className="text-[10px] text-cyan-400 font-mono text-center break-all px-4">
+                  Tx: {hash}
+                </div>
+              )}
+              
               <p className="text-[10px] text-white/30 tracking-widest uppercase font-bold text-center mt-3">Powered by Base • ERC-8004</p>
            </div>
          </div>

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { motion } from 'motion/react';
-import { appendAttribution } from '../../lib/erc8021';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
+import { useERC8021Transaction } from '../../hooks/useERC8021Transaction';
+import { stringToHex, Hex } from 'viem';
 
 export default function GameOverScreen() {
   const { setScreen, distance, score, resetGame } = useGameStore();
   const { address, isConnected } = useAccount();
   const { connect } = useConnect();
   
-  const [isRecording, setIsRecording] = useState(false);
+  const { sendTransaction, isPending, hash, isSuccess } = useERC8021Transaction();
 
   const handleRecordRun = async () => {
     if (!isConnected) {
@@ -18,24 +19,27 @@ export default function GameOverScreen() {
       return;
     }
     
-    setIsRecording(true);
-    try {
-      // Mocking transaction submission on-chain using SIWE / Wagmi
-      console.log("Preparing transaction from account:", address);
-      let calldata = "0xdeadbeef"; 
-      calldata = appendAttribution(calldata);
-      console.log("Calculated Calldata with ERC-8021 Builder code:", calldata);
-      
-      // Simulate network wait
-      await new Promise(r => setTimeout(r, 2000));
-      
-      console.log("Mock Tx Hash: 0x9876543210...");
-      alert(`Run securely recorded on Base Mainnet for ${address}!`);
-    } catch(e) {
-      console.error(e);
-      alert("Failed to record run.");
-    } finally {
-      setIsRecording(false);
+    if (address) {
+      const scoreData = stringToHex(`WarpJumper_Score:${Math.floor(distance)}`);
+      sendTransaction({
+        to: address,
+        data: scoreData as Hex
+      });
+    }
+  };
+
+  const handleSayGM = () => {
+    if (!isConnected) {
+      connect({ connector: injected() });
+      return;
+    }
+    
+    if (address) {
+      const gmData = stringToHex('GM Warp Jumper!');
+      sendTransaction({
+        to: address,
+        data: gmData as Hex
+      });
     }
   };
 
@@ -67,16 +71,34 @@ export default function GameOverScreen() {
         <div className="space-y-4">
           <button 
             onClick={handleRecordRun}
-            disabled={isRecording}
+            disabled={isPending}
             className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-tighter transition-all shadow-lg
-              ${isRecording 
+              ${isPending 
                  ? "bg-white/10 text-white/40 cursor-not-allowed" 
                  : "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:brightness-110"
               }`}
           >
-            {isRecording ? "Transmitting..." : (isConnected ? "Record Run On-Chain" : "Connect To Record")}
+            {isPending ? "Transmitting..." : (isConnected ? "Record Run On-Chain" : "Connect To Record")}
           </button>
           
+          <button 
+            onClick={handleSayGM}
+            disabled={isPending}
+            className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-tighter transition-all shadow-lg border border-cyan-500/50
+              ${isPending 
+                 ? "bg-white/10 text-white/40 cursor-not-allowed border-white/10" 
+                 : "bg-black/50 text-cyan-400 hover:bg-cyan-950/50"
+              }`}
+          >
+            {isPending ? "Transmitting..." : "Say GM (On-Chain)"}
+          </button>
+          
+          {isSuccess && hash && (
+            <div className="text-[10px] text-cyan-400 font-mono flex items-center justify-center break-all">
+              Tx: {hash}
+            </div>
+          )}
+
           <button 
             onClick={() => {
               resetGame();
