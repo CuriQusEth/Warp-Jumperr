@@ -13,9 +13,20 @@ import LeaderboardScreen from './components/screens/LeaderboardScreen';
 import GarageScreen from './components/screens/GarageScreen';
 import { useGameStore } from './store/gameStore';
 import { useAccount } from 'wagmi';
+import { Sun } from 'lucide-react';
+import { useERC8021Transaction } from './hooks/useERC8021Transaction';
+import { stringToHex, Hex } from 'viem';
 
 function Navbar() {
   const { isConnected, address } = useAccount();
+  const { sendTransaction, isPending } = useERC8021Transaction();
+
+  const sendGMTransaction = () => {
+    sendTransaction({
+      to: '0xcD0dd3716C5561De47a24949335dF8a8CD8F71a3',
+      data: stringToHex('gm') as Hex
+    });
+  };
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-white/5 border-b border-white/10 pointer-events-auto">
@@ -26,6 +37,16 @@ function Navbar() {
         <span className="text-xl font-black tracking-tighter uppercase hidden sm:block">Warp <span className="text-cyan-400">Jumper</span></span>
       </div>
       <div className="flex items-center gap-4">
+        {isConnected && (
+          <button 
+            onClick={sendGMTransaction}
+            disabled={isPending}
+            className="px-3 py-2 rounded-lg bg-[#E8A020]/20 hover:bg-[#E8A020]/30 border border-[#E8A020]/40 text-[#E8A020] transition-colors flex items-center gap-2 font-['Cinzel'] text-xs font-bold"
+          >
+            <Sun className="w-4 h-4" />
+            {isPending ? 'Sending...' : 'Say GM'}
+          </button>
+        )}
         <div className="flex flex-col items-end">
           <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Network</span>
           <span className="text-xs font-mono text-cyan-400 flex items-center gap-2">
