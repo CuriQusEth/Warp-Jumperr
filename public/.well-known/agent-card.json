@@ -25,6 +25,12 @@
       "endpoint": "https://warp-jumper.vercel.app/api/agent",
       "version": "1.0.0",
       "description": "Main agent control API"
+    },
+    {
+      "name": "Base MCP",
+      "endpoint": "https://mcp.base.org",
+      "version": "1.0.0",
+      "description": "Official Base MCP Server integration for on-chain actions"
     }
   ],
   "capabilities": [

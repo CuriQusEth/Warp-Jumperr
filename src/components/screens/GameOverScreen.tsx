@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { motion } from 'motion/react';
 import { useAccount, useConnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { useERC8021Transaction } from '../../hooks/useERC8021Transaction';
 import { stringToHex, Hex } from 'viem';
+import { SaveScoreButton } from '../SaveScoreButton';
 
 export default function GameOverScreen() {
   const { setScreen, distance, score, resetGame } = useGameStore();
@@ -12,21 +13,6 @@ export default function GameOverScreen() {
   const { connect } = useConnect();
   
   const { sendTransaction, isPending, hash, isSuccess } = useERC8021Transaction();
-
-  const handleRecordRun = async () => {
-    if (!isConnected) {
-      connect({ connector: injected() });
-      return;
-    }
-    
-    if (address) {
-      const scoreData = stringToHex(`WarpJumper_Score:${Math.floor(distance)}`);
-      sendTransaction({
-        to: address,
-        data: scoreData as Hex
-      });
-    }
-  };
 
   const handleSayGM = () => {
     if (!isConnected) {
@@ -69,17 +55,7 @@ export default function GameOverScreen() {
         </div>
 
         <div className="space-y-4">
-          <button 
-            onClick={handleRecordRun}
-            disabled={isPending}
-            className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-tighter transition-all shadow-lg
-              ${isPending 
-                 ? "bg-white/10 text-white/40 cursor-not-allowed" 
-                 : "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:brightness-110"
-              }`}
-          >
-            {isPending ? "Transmitting..." : (isConnected ? "Record Run On-Chain" : "Connect To Record")}
-          </button>
+          <SaveScoreButton score={Math.floor(score)} />
           
           <button 
             onClick={handleSayGM}
