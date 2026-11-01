@@ -12,13 +12,17 @@ import GameOverScreen from './components/screens/GameOverScreen';
 import LeaderboardScreen from './components/screens/LeaderboardScreen';
 import GarageScreen from './components/screens/GarageScreen';
 import { useGameStore } from './store/gameStore';
-import { useAccount } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { injected } from 'wagmi/connectors';
 import { Sun } from 'lucide-react';
 import { useERC8021Transaction } from './hooks/useERC8021Transaction';
 import { stringToHex, Hex } from 'viem';
+import { DenimStatusBadge } from './components/DenimStatusBadge';
 
 function Navbar() {
   const { isConnected, address } = useAccount();
+  const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
   const { sendTransaction, isPending } = useERC8021Transaction();
 
   const sendGMTransaction = () => {
@@ -47,16 +51,28 @@ function Navbar() {
             {isPending ? 'Sending...' : 'Say GM'}
           </button>
         )}
-        <div className="flex flex-col items-end">
-          <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Network</span>
-          <span className="text-xs font-mono text-cyan-400 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> BASE MAINNET
-          </span>
-        </div>
-        <div className="h-8 w-[1px] bg-white/10"></div>
-        <button className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full font-bold text-xs backdrop-blur-xl transition-all font-mono">
-          {isConnected && address ? `${address.slice(0, 5)}...${address.slice(-4)}` : 'Connect'}
-        </button>
+
+        {/* Base Denim 200ms Native Blocks live status & network switcher */}
+        <DenimStatusBadge />
+
+        <div className="h-8 w-[1px] bg-white/10 hidden sm:block"></div>
+        
+        {isConnected && address ? (
+          <button 
+            onClick={() => disconnect()}
+            className="px-4 py-2 bg-white/10 hover:bg-rose-500/20 hover:border-rose-500/40 border border-white/20 rounded-full font-bold text-xs backdrop-blur-xl transition-all font-mono"
+            title="Click to Disconnect"
+          >
+            {`${address.slice(0, 5)}...${address.slice(-4)}`}
+          </button>
+        ) : (
+          <button 
+            onClick={() => connect({ connector: injected() })}
+            className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 rounded-full font-bold text-xs backdrop-blur-xl transition-all font-mono text-cyan-300"
+          >
+            Connect
+          </button>
+        )}
       </div>
     </nav>
   );

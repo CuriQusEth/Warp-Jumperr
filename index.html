@@ -6,6 +6,73 @@
     <meta name="base:app_id" content="68f3ff7f8c4fe3f562003d88" />
     <meta name="talentapp:project_verification" content="78ec825e1a9fd83b306cd1e65ab66083c28c40a123c7a9330f8e71951b631afb9dacd2efa695f3054d17b7afd503cd61f8c3d422d29184362722bb6d765c1bfb">
     <title>Warp Jumper</title>
+    <script>
+      /**
+       * Safe Object.defineProperty polyfill & error interceptor for Web3 browser extensions.
+       * Fixes collisions between multi-wallet extensions (e.g. Zerion, Rabby, MetaMask, Coinbase)
+       * attempting to redefine non-configurable properties like window.ethereum.isZerion.
+       */
+      (function () {
+        var originalDefineProperty = Object.defineProperty;
+        Object.defineProperty = function (obj, prop, descriptor) {
+          try {
+            return originalDefineProperty.call(Object, obj, prop, descriptor);
+          } catch (err) {
+            if (
+              err instanceof TypeError &&
+              err.message &&
+              err.message.indexOf('Cannot redefine property') !== -1
+            ) {
+              try {
+                if (descriptor && 'value' in descriptor) {
+                  obj[prop] = descriptor.value;
+                }
+              } catch (_) {}
+              return obj;
+            }
+            throw err;
+          }
+        };
+
+        // Suppress uncaught wallet extension errors from bubbling and tripping error screens
+        window.addEventListener(
+          'error',
+          function (event) {
+            var src = (event && event.filename) || '';
+            var msg = (event && event.message) || '';
+            if (
+              src.indexOf('chrome-extension://') !== -1 ||
+              src.indexOf('moz-extension://') !== -1 ||
+              msg.indexOf('Cannot redefine property') !== -1 ||
+              msg.indexOf('isZerion') !== -1
+            ) {
+              if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+              if (event.preventDefault) event.preventDefault();
+              return true;
+            }
+          },
+          true
+        );
+
+        window.addEventListener(
+          'unhandledrejection',
+          function (event) {
+            var reason = event && event.reason;
+            var msg = (reason && reason.message) || String(reason || '');
+            if (
+              msg.indexOf('Cannot redefine property') !== -1 ||
+              msg.indexOf('isZerion') !== -1 ||
+              msg.indexOf('chrome-extension://') !== -1
+            ) {
+              if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+              if (event.preventDefault) event.preventDefault();
+              return true;
+            }
+          },
+          true
+        );
+      })();
+    </script>
   </head>
   <body class="bg-black text-white overflow-hidden touch-none">
     <div id="root"></div>
