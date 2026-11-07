@@ -14,13 +14,17 @@
  * 5. Historical block assumptions adjusted for 200ms (5 blocks/sec).
  */
 
+export const DEFAULT_DENIM_CHAIN_ID = 8453; // Base Mainnet
+export const DEFAULT_DENIM_NETWORK = "Base Mainnet";
+
 export const DENIM_SPECS = {
   blockTimeMs: 200,
   blocksPerSecond: 5,
+  defaultChainId: 8453, // Base Mainnet
   denimUpgrade: {
+    baseMainnetStatus: "Active 200ms canonical blocks (November 2026)",
     baseSepoliaActivated: "October 21, 2026 18:00 UTC",
-    baseMainnetTarget: "November 2026",
-    vibenetStatus: "Active 200ms canonical blocks testnet",
+    vibenetStatus: "Active developer testbed",
   },
   rpcActionReplacements: {
     "eth_subscribe(\"newFlashblocks\")": "eth_subscribe(\"newHeads\")",

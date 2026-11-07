@@ -69,7 +69,22 @@ Denim yükseltmesi ile Flashblocks abonelikleri ve "pending" preconfirmation dur
 
 ---
 
-## 8. GitHub'a Gönderme (Push) Talimatı
+## 8. Base Denim Mainnet (Chain ID 8453) Geçişi
+
+- **Birincil Ağ Yapılandırması:**
+  - Base Mainnet (`8453`) tüm uygulama için varsayılan ve birincil Denim ağı olarak ayarlandı.
+  - RPC Uç Noktası: `https://mainnet.base.org` (yüksek performanslı, kanonik 200ms blok takibi).
+- **Cüzdan Bağlantısı:**
+  - Kullanıcı "Connect" butonuna bastığında varsayılan olarak Base Mainnet (`chainId: base.id` / `8453`) üzerinden bağlantı sağlanır.
+- **Canlı Durum ve Gösterge (`DenimStatusBadge`):**
+  - Navbar üzerindeki rozette "Base Mainnet - Denim Live (200ms)" birincil olarak vurgulandı.
+  - Kullanıcı dilediğinde Sepolia veya Vibenet ağları arasında geçiş yapabilir; varsayılan ağ Base Mainnet'tir.
+- **Kanonik 200ms Blok Uyumu:**
+  - Base Mainnet üzerindeki tüm RPC çağrılarında (durum okuma, bakiye, skor sorgulama) `"latest"` kanonik etiketi geçerlidir; eski Flashblocks `"pending"` etiketleri tamamen kaldırılmıştır.
+
+---
+
+## 9. GitHub'a Gönderme (Push) Talimatı
 
 Tüm değişiklikler yerel Git reposunda commit edilmiştir. Uzak repoya aktarmak için terminalinizde çalıştırabileceğiniz komutlar:
 

@@ -31,8 +31,8 @@ export const baseVibenet = defineChain({
 export const config = createConfig({
   chains: [base, baseSepolia, baseVibenet],
   transports: {
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
+    [base.id]: http("https://mainnet.base.org"),
+    [baseSepolia.id]: http("https://sepolia.base.org"),
     [baseVibenet.id]: http("https://rpc.vibes.base.org"),
   },
   dataSuffix: DATA_SUFFIX,

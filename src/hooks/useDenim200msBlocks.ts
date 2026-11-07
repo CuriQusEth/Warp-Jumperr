@@ -53,12 +53,12 @@ export function useDenim200msBlocks() {
   const getNetworkInfo = (id: number) => {
     switch (id) {
       case 84538453:
-        return { name: "Base Vibenet (200ms Native Blocks)", isDenim: true };
+        return { name: "Base Vibenet (200ms Native Blocks)", isDenim: true, isMainnet: false };
       case 84532:
-        return { name: "Base Sepolia (Denim Live)", isDenim: true };
+        return { name: "Base Sepolia (Denim Live)", isDenim: true, isMainnet: false };
       case 8453:
       default:
-        return { name: "Base Mainnet (Denim Canonical)", isDenim: true };
+        return { name: "Base Mainnet (Denim Live 200ms)", isDenim: true, isMainnet: true };
     }
   };
 
@@ -69,6 +69,7 @@ export function useDenim200msBlocks() {
     blockIntervalMs: blockIntervalMs ?? DENIM_SPECS.blockTimeMs,
     blocksPerSec: blocksPerSec ?? DENIM_SPECS.blocksPerSecond,
     isDenimActive: netInfo.isDenim,
+    isMainnet: netInfo.isMainnet,
     blockTag: "latest" as const,
     networkName: netInfo.name,
     targetBlockTimeMs: DENIM_SPECS.blockTimeMs,

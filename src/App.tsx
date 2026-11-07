@@ -13,6 +13,7 @@ import LeaderboardScreen from './components/screens/LeaderboardScreen';
 import GarageScreen from './components/screens/GarageScreen';
 import { useGameStore } from './store/gameStore';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { base } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
 import { Sun } from 'lucide-react';
 import { useERC8021Transaction } from './hooks/useERC8021Transaction';
@@ -67,7 +68,7 @@ function Navbar() {
           </button>
         ) : (
           <button 
-            onClick={() => connect({ connector: injected() })}
+            onClick={() => connect({ connector: injected(), chainId: base.id })}
             className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 rounded-full font-bold text-xs backdrop-blur-xl transition-all font-mono text-cyan-300"
           >
             Connect

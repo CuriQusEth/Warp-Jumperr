@@ -12,9 +12,9 @@ export function DenimStatusBadge() {
   const [isOpen, setIsOpen] = useState(false);
 
   const chains = [
-    { id: base.id, name: 'Base Mainnet', badge: 'Canonical 200ms', desc: 'Targeting Nov 2026' },
-    { id: baseSepolia.id, name: 'Base Sepolia', badge: 'Denim Live', desc: 'Live since Oct 21, 2026' },
-    { id: baseVibenet.id, name: 'Base Vibenet', badge: '200ms Native Blocks', desc: 'Experimental Testbed' },
+    { id: base.id, name: 'Base Mainnet', badge: 'Denim Live (200ms)', desc: 'Canonical 200ms Native Blocks (Mainnet)' },
+    { id: baseSepolia.id, name: 'Base Sepolia', badge: 'Sepolia Testnet', desc: 'Denim Testnet (Active)' },
+    { id: baseVibenet.id, name: 'Base Vibenet', badge: 'Vibenet Preview', desc: 'Experimental Testbed' },
   ];
 
   const currentChain = chains.find((c) => c.id === currentChainId) || chains[0];
